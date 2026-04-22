@@ -9,7 +9,7 @@ include(FetchContent)
 FetchContent_Declare(
     vst3sdk
     GIT_REPOSITORY https://github.com/steinbergmedia/vst3sdk.git
-    GIT_TAG        v3.7.12_build_36
+    GIT_TAG        master
     GIT_SHALLOW    TRUE
     GIT_SUBMODULES "pluginterfaces;base;public.sdk;vstgui4"
 )
