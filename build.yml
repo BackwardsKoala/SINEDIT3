@@ -1,0 +1,42 @@
+name: Build macOS VST3
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  build-macos:
+    runs-on: macos-14   # Apple Silicon runner (arm64)
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install CMake
+        uses: lukka/get-cmake@latest
+
+      - name: Configure
+        run: |
+          cmake -B build \
+            -DCMAKE_BUILD_TYPE=Release \
+            -DSMTG_ADD_VSTGUI=ON \
+            -DSMTG_BUILD_UNIVERSAL_BINARY=ON \
+            -DSMTG_ADD_VST3_PLUGINS_SAMPLES=OFF \
+            -DSMTG_ADD_VST3_HOSTING_SAMPLES=OFF
+
+      - name: Build
+        run: cmake --build build --config Release --parallel
+
+      - name: Package .vst3
+        run: |
+          mkdir -p artifact
+          find build -name "*.vst3" -exec cp -r {} artifact/ \;
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: SinDecomposer-macOS-VST3
+          path: artifact/
+          retention-days: 30
