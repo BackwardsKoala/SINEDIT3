@@ -4,7 +4,6 @@ project(SinDecomposer VERSION 1.0.0)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-# Fetch VST3 SDK
 include(FetchContent)
 FetchContent_Declare(
     vst3sdk
@@ -15,10 +14,12 @@ FetchContent_Declare(
 )
 FetchContent_MakeAvailable(vst3sdk)
 
-set(SMTG_ADD_VSTGUI ON)
-set(SMTG_ADD_VST3_PLUGINS_SAMPLES OFF)
-set(SMTG_ADD_VST3_HOSTING_SAMPLES OFF)
-set(SMTG_BUILD_UNIVERSAL_BINARY ON)  # arm64 + x86_64 fat binary for Mac
+set(SMTG_ADD_VSTGUI ON CACHE BOOL "" FORCE)
+set(SMTG_ADD_VST3_PLUGINS_SAMPLES OFF CACHE BOOL "" FORCE)
+set(SMTG_ADD_VST3_HOSTING_SAMPLES OFF CACHE BOOL "" FORCE)
+
+list(APPEND CMAKE_MODULE_PATH "${vst3sdk_SOURCE_DIR}/cmake/modules")
+include(SMTG_VST3_SDK)
 
 smtg_enable_vst3_sdk()
 
@@ -28,24 +29,16 @@ smtg_add_vst3plugin(SinDecomposer
     src/plugfactory.cpp
     src/editor.cpp
     src/fft.cpp
-    include/plugids.h
-    include/plugprocessor.h
-    include/plugcontroller.h
-    include/editor.h
-    include/fft.h
-    include/partial.h
 )
 
-target_include_directories(SinDecomposer PRIVATE include)
-
-smtg_target_configure_version_file(SinDecomposer)
-smtg_target_add_plugin_resources(SinDecomposer
-    RESOURCES resources/
+target_include_directories(SinDecomposer PRIVATE
+    include
+    ${vst3sdk_SOURCE_DIR}
 )
 
 if(SMTG_MAC)
     smtg_target_set_bundle(SinDecomposer
         BUNDLE_IDENTIFIER "com.yourname.sindecomposer"
-        COMPANY_NAME "SINEDIT"
+        COMPANY_NAME "YourName"
     )
 endif()
