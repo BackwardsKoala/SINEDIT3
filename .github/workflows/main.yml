@@ -21,7 +21,8 @@ jobs:
             https://github.com/steinbergmedia/vst3sdk.git vst3sdk
 
       - name: Copy plugin into SDK
-        run: |
+       run: |
+          mkdir -p vst3sdk/my_plugin
           cp -r myplugin/src     vst3sdk/my_plugin/
           cp -r myplugin/include vst3sdk/my_plugin/
           cat >> vst3sdk/CMakeLists.txt << 'EOF'
