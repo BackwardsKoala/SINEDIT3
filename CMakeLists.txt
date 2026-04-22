@@ -12,16 +12,14 @@ FetchContent_Declare(
     GIT_SHALLOW    TRUE
     GIT_SUBMODULES "pluginterfaces;base;public.sdk;vstgui4"
 )
-FetchContent_MakeAvailable(vst3sdk)
+FetchContent_Populate(vst3sdk)
 
 set(SMTG_ADD_VSTGUI ON CACHE BOOL "" FORCE)
 set(SMTG_ADD_VST3_PLUGINS_SAMPLES OFF CACHE BOOL "" FORCE)
 set(SMTG_ADD_VST3_HOSTING_SAMPLES OFF CACHE BOOL "" FORCE)
+set(SMTG_CREATE_PLUGIN_LINK OFF CACHE BOOL "" FORCE)
 
-list(APPEND CMAKE_MODULE_PATH "${vst3sdk_SOURCE_DIR}/cmake/modules")
-include(SMTG_VST3_SDK)
-
-smtg_enable_vst3_sdk()
+add_subdirectory(${vst3sdk_SOURCE_DIR} ${vst3sdk_BINARY_DIR})
 
 smtg_add_vst3plugin(SinDecomposer
     src/plugprocessor.cpp
