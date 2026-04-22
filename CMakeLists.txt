@@ -9,7 +9,7 @@ include(FetchContent)
 FetchContent_Declare(
     vst3sdk
     GIT_REPOSITORY https://github.com/steinbergmedia/vst3sdk.git
-    GIT_TAG        v3.7.9_build_16
+    GIT_TAG        v3.7.12_build_36
     GIT_SHALLOW    TRUE
     GIT_SUBMODULES "pluginterfaces;base;public.sdk;vstgui4"
 )
@@ -46,6 +46,6 @@ smtg_target_add_plugin_resources(SinDecomposer
 if(SMTG_MAC)
     smtg_target_set_bundle(SinDecomposer
         BUNDLE_IDENTIFIER "com.yourname.sindecomposer"
-        COMPANY_NAME "YourName"
+        COMPANY_NAME "SINEDIT"
     )
 endif()
