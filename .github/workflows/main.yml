@@ -53,6 +53,7 @@ jobs:
       - name: Configure
         run: |
           cmake -B build vst3sdk \
+            -GXcode \
             -DCMAKE_BUILD_TYPE=Release \
             -DSMTG_ADD_VSTGUI=ON \
             -DSMTG_ADD_VST3_PLUGINS_SAMPLES=OFF \
