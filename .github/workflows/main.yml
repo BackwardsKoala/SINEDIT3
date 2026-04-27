@@ -22,9 +22,10 @@ jobs:
 
       - name: Copy plugin into SDK
         run: |
-          mkdir -p vst3sdk/my_plugin
-          cp -r myplugin/src vst3sdk/my_plugin/
-          cp -r myplugin/include vst3sdk/my_plugin/
+          mkdir -p vst3sdk/my_plugin/src
+          mkdir -p vst3sdk/my_plugin/include
+          cp -r myplugin/SinDecomposer/src/* vst3sdk/my_plugin/src/
+          cp -r myplugin/SinDecomposer/include/* vst3sdk/my_plugin/include/
           cat >> vst3sdk/CMakeLists.txt << 'EOF'
           add_subdirectory(my_plugin)
           EOF
@@ -39,4 +40,31 @@ jobs:
               src/editor.cpp
               src/fft.cpp
           )
-          target_include_directories(SinDe
+          target_include_directories(SinDecomposer PRIVATE
+              ${CMAKE_CURRENT_SOURCE_DIR}/include
+              ${SDK_ROOT}
+          )
+          smtg_target_set_bundle(SinDecomposer
+              BUNDLE_IDENTIFIER "com.yourname.sindecomposer"
+              COMPANY_NAME "YourName"
+          )
+          EOF
+
+      - name: Configure
+        run: |
+          cmake -B build vst3sdk \
+            -DCMAKE_BUILD_TYPE=Release \
+            -DSMTG_ADD_VSTGUI=ON \
+            -DSMTG_ADD_VST3_PLUGINS_SAMPLES=OFF \
+            -DSMTG_ADD_VST3_HOSTING_SAMPLES=OFF \
+            -DSMTG_CREATE_PLUGIN_LINK=OFF
+
+      - name: Build
+        run: cmake --build build --config Release --parallel
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: SinDecomposer-macOS-VST3
+          path: build/VST3/
+          retention-days: 30
